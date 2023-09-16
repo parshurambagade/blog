@@ -90,7 +90,7 @@ app.get('/register', (req,res) => {
 app.post('/register', async (req,res) => {
   const {username, email, password} = req.body;
   await User.findOne({email: email}).then(foundUser => {if(foundUser){ 
-    res.status(409).json({message: "user alrady exists!"}).catch(err => console.log(err));
+    res.status(409).json({message: "user alrady exists!"})
   }else{
     bcrypt.hash(password, 10, (err, hash) => {
       if(err) console.log(err);
@@ -102,7 +102,7 @@ app.post('/register', async (req,res) => {
       
       user.save().then(()=> res.redirect('/login'));
     })
-  }});
+  }}).catch(err => console.log(err));;
   
 
 })
@@ -122,7 +122,9 @@ app.post('/login', async (req,res) => {
       res.status(404).json({message: "user not found!"});
     }
     bcrypt.compare(password, foundUser.password, (err, result) => {
-      if(err) console.log(err);
+      if(err){
+        console.log(err);
+      }
 
       if(result === true) {
         const user = {
@@ -134,12 +136,12 @@ app.post('/login', async (req,res) => {
         res.cookie('token', token, {
           httpOnly: true, // Make the cookie accessible only via HTTP (not JavaScript)
           // Other cookie options (e.g., secure, sameSite) for security
-        }).redirect('/').catch(err => console.log(err));
+        }).redirect('/');
       }else{
         res.redirect('/login');
       }
     })
-  })
+  }).catch(err => console.log(err));
   
 })
 
