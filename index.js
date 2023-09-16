@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 dotenv.config();
 const secretKey = 'your-secret-key';
 
-mongoose.connect(process.env.MONGO_URL_LOCAL)
+mongoose.connect(process.env.MONGO_URL_CLOUD)
 .then(() => console.log('MongoDB connected successfully'))
 .catch((err) => console.log(`error occoured: ${err}`));
 
