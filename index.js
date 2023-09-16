@@ -71,7 +71,7 @@ app.use(express.static("public"));
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).redirect('/login')
   }
   
   jwt.verify(token, 'your-secret-key', (err, user) => {
@@ -87,18 +87,23 @@ app.get('/register', (req,res) => {
   res.render('register');
 });
 
-app.post('/register', (req,res) => {
+app.post('/register', async (req,res) => {
   const {username, email, password} = req.body;
-  bcrypt.hash(password, 10, (err, hash) => {
-    if(err) console.log(err);
-    const user = new User({
-      username, 
-      email, 
-      password: hash
-    });
-    
-    user.save().then(()=> res.redirect('/login'));
-  })
+  await User.findOne({email: email}).then(foundUser => {if(foundUser){ 
+    res.status(409).json({message: "user alrady exists!"})
+  }else{
+    bcrypt.hash(password, 10, (err, hash) => {
+      if(err) console.log(err);
+      const user = new User({
+        username, 
+        email, 
+        password: hash
+      });
+      
+      user.save().then(()=> res.redirect('/login'));
+    })
+  }});
+  
 
 })
 
@@ -107,13 +112,15 @@ app.get('/login', (req,res) => {
   res.render('login');
 });
 
-app.post('/login', (req,res) => {
+app.post('/login', async (req,res) => {
   
   
   const {email, password} = req.body;
   
-  User.findOne({email: email}).then(foundUser => {
-    
+  await User.findOne({email: email}).then(foundUser => {
+    if(!foundUser){
+      res.status(404).json({message: "user not found!"});
+    }
     bcrypt.compare(password, foundUser.password, (err, result) => {
       if(err) console.log(err);
 

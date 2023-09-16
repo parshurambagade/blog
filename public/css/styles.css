@@ -7,7 +7,8 @@
 }
 
 .homeContainer, .aboutContainer, .contactContainer, .postContainer, .composeContainer{
-    height:100vh !important;
+    min-height:70vh !important;
+    height: max-content;
 }
 .navbar {
     padding-top: 15px;
@@ -30,15 +31,17 @@
 }
 
 .footer {
-	position: static;
+	position: absolute;
 	text-align: center;
 	width: 100%;
+    bottom: 0;
 	height: max-content;
 	background-color: #1abc9c;
     display: flex;
     align-items: center;
     justify-content: center;
     padding:2rem 0 1rem;
+    margin-bottom:0;
 }
 
 .footer p {
@@ -60,4 +63,41 @@
 
 .addIcon:hover{
     text-decoration: none;
+}
+
+.page-container{
+    padding: 3rem 8rem;
+    
+}
+
+.page-container form{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width:50%;
+}
+.form-buttons{
+    margin-top:1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-buttons p{
+    font-size: 1.5rem;
+}
+form button{
+    padding: 1rem;
+    width:50%;
+    
+}
+input{
+    border: none;
+    border-bottom:1px solid gray;
+    padding:1rem;
+}
+.page-heading{
+    text-align: center;
+    margin:1.5rem;
+    margin-bottom:2rem;
 }
