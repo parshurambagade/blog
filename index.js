@@ -99,7 +99,7 @@ app.post('/register', async (req, res) => {
       password: hash,
     });
 
-    await user.save();
+    await user.save().maxTimeMS(20000);
     res.redirect('/login');
   } catch (err) {
     console.error(err);
@@ -117,7 +117,7 @@ app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const foundUser = await User.findOne({ email: email });
+    const foundUser = await User.findOne({ email: email }).maxTimeMS(20000);
 
     if (!foundUser) {
       res.status(404).json({ message: 'User not found!' });
