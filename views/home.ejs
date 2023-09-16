@@ -1,14 +1,11 @@
-
-<%- include("partials/header") -%>
+<%-include('partials/header.ejs') %>
+<div class="homeContainer">
 <h1>Home</h1>
-<p><%= startingContent%></p>
-
-<% posts.forEach((post) => { %>
-<% let postContent = (post.content).slice(0,100) %>
-<h1><%= post.title %></h1>
-<p><%= postContent %>...
-<a href="/posts/<%=post.title%>">Read more</a>
-</p> 
+<p><%= homeStartingContent %></p>
+<a href="/compose" class="addIcon">+</a>
+<% posts.forEach(post => { %>
+    <h1><%= post.title %></h1>
+    <p><%= post.content.slice(0, 100) + "..."%> <a href="/posts/<%= post._id %>">Read more</a></p>
 <% }); %>
-<%- include("partials/footer") -%>
-
+</div>
+<%-include('partials/footer.ejs') %>
