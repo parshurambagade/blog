@@ -90,7 +90,7 @@ app.get('/register', (req,res) => {
 app.post('/register', async (req,res) => {
   const {username, email, password} = req.body;
   await User.findOne({email: email}).then(foundUser => {if(foundUser){ 
-    res.status(409).json({message: "user alrady exists!"})
+    res.status(409).json({message: "user alrady exists!"}).catch(err => console.log(err));
   }else{
     bcrypt.hash(password, 10, (err, hash) => {
       if(err) console.log(err);
@@ -134,7 +134,7 @@ app.post('/login', async (req,res) => {
         res.cookie('token', token, {
           httpOnly: true, // Make the cookie accessible only via HTTP (not JavaScript)
           // Other cookie options (e.g., secure, sameSite) for security
-        }).redirect('/');
+        }).redirect('/').catch(err => console.log(err));
       }else{
         res.redirect('/login');
       }
