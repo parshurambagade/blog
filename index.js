@@ -87,20 +87,25 @@ app.get('/register', (req,res) => {
   res.render('register');
 });
 
-app.post('/register', (req,res) => {
-  const {username, email, password} = req.body;
-  
-    bcrypt.hash(password, 10, (err, hash) => {
-      if(err) console.log(err);
-      const user = new User({
-        username, 
-        email, 
-        password: hash
-      });
-      
-      user.save().then(()=> res.redirect('/login'));
-    })
-})
+app.post('/register', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    const hash = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      username,
+      email,
+      password: hash,
+    });
+
+    await user.save();
+    res.redirect('/login');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred during registration');
+  }
+});
 
 
 
@@ -108,38 +113,37 @@ app.get('/login', (req,res) => {
   res.render('login');
 });
 
-app.post('/login', async (req,res) => {
-  
-  
-  const {email, password} = req.body;
-  
-  await User.findOne({email: email}).then(foundUser => {
-    if(!foundUser){
-      res.status(404).json({message: "user not found!"});
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const foundUser = await User.findOne({ email: email });
+
+    if (!foundUser) {
+      res.status(404).json({ message: 'User not found!' });
+      return;
     }
-    bcrypt.compare(password, foundUser.password, (err, result) => {
-      if(err){
-        console.log(err);
-      }
 
-      if(result === true) {
-        const user = {
-          _id:  foundUser._id // Replace 'user-id' with the actual user's _id
-        };
-       
-        const token = jwt.sign(user, secretKey, { expiresIn: '1h' }); // Expires in 1 hour
+    const result = await bcrypt.compare(password, foundUser.password);
 
-        res.cookie('token', token, {
-          httpOnly: true, // Make the cookie accessible only via HTTP (not JavaScript)
-          // Other cookie options (e.g., secure, sameSite) for security
-        }).redirect('/');
-      }else{
-        res.redirect('/login');
-      }
-    })
-  }).catch(err => console.log(err));
-  
-})
+    if (result === true) {
+      const user = {
+        _id: foundUser._id,
+      };
+
+      const token = jwt.sign(user, secretKey, { expiresIn: '1h' });
+
+      res.cookie('token', token, {
+        httpOnly: true,
+      }).redirect('/');
+    } else {
+      res.redirect('/login');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred during login');
+  }
+});
 
 app.get('/logout', (req, res) => {
   res.clearCookie('token'); // Clear the 'token' cookie
