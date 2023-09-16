@@ -87,11 +87,9 @@ app.get('/register', (req,res) => {
   res.render('register');
 });
 
-app.post('/register', async (req,res) => {
+app.post('/register', (req,res) => {
   const {username, email, password} = req.body;
-  await User.findOne({email: email}).then(foundUser => {if(foundUser){ 
-    res.status(409).json({message: "user alrady exists!"})
-  }else{
+  
     bcrypt.hash(password, 10, (err, hash) => {
       if(err) console.log(err);
       const user = new User({
@@ -102,10 +100,8 @@ app.post('/register', async (req,res) => {
       
       user.save().then(()=> res.redirect('/login'));
     })
-  }}).catch(err => console.log(err));;
-  
-
 })
+
 
 
 app.get('/login', (req,res) => {
