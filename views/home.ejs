@@ -3,9 +3,14 @@
 <h1>Home</h1>
 <p><%= homeStartingContent %></p>
 <a href="/compose" class="addIcon">+</a>
+<div class="posts-section">
 <% posts.forEach(post => { %>
-    <h1><%= post.title %></h1>
-    <p><%= post.content.slice(0, 100) + "..."%> <a href="/posts/<%= post._id %>">Read more</a></p>
+    <div class="post-card">
+        <p class="post-date"p><%= `${post.createdAt.getDate()}/${(post.createdAt.getMonth() + 1).toString().padStart(2, '0')}/${post.createdAt.getFullYear()}` %></p>
+        <h1><%= post.title %></h1>
+        <p><%= post.content.slice(0, 100) + "..."%> <a href="/posts/<%= post._id %>">Read more</a></p>
+    </div>
 <% }); %>
+</div>
 </div>
 <%-include('partials/footer.ejs') %>

@@ -1,3 +1,11 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: rgb(223, 249, 240);
+}
 .container-fluid {
     padding-top:5rem;
     padding-bottom:5rem;
@@ -18,7 +26,7 @@
     margin-bottom: 0;
     font-size: 12px;
     letter-spacing: 5px;
-    /* background-color: #e7e8e8; */
+    background-color:transparent;
 }
 
 .navbar-nav  li a:hover {
@@ -50,6 +58,28 @@
   color: #fff;
 }
 
+/***************** HOME SECTION  *****************/
+
+.posts-section{
+    display: flex;
+    justify-content: flex-start;
+    height:max-content;
+    flex-wrap: wrap;
+    gap:3rem;
+    flex-direction: row;
+}
+.post-card{
+    height:40vh;
+    border: 1px solid black;
+    border-radius: 1rem;
+    width:30%;
+    padding:2rem;
+}
+
+.post-date{
+    text-align: right;
+}
+
 .addIcon{
     font-size: 4rem;
     padding:.5rem 2rem;
@@ -64,40 +94,71 @@
 .addIcon:hover{
     text-decoration: none;
 }
-
+/************************ LOGIN / REGISTER SECTION  ********************/
 .page-container{
     padding: 3rem 8rem;
-    
+    display: flex;
+    width:80%;
+    height:90vh;
+    align-items: center;
+    justify-content: center;
+    margin:auto;
+}
+
+.first-container, .second-container{
+    width:50%;
+    height:100%;
+    overflow: hidden;
+}
+
+.first-container{
+    border-radius: 2rem 0 0 2rem;
+    background:url('https://images.pexels.com/photos/3153204/pexels-photo-3153204.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+    background-size: cover;
+    height:100%;
+}
+
+.second-container{
+    border:1px solid rgb(209, 205, 205);
+    border-radius: 0 2rem 2rem 0;
+    padding:2rem 3rem;
+    height:100%;
+    background-color:white;
 }
 
 .page-container form{
     display: flex;
     flex-direction: column;
     margin: auto;
-    width:50%;
+    width:100%;
+}
+
+.message{
+    margin:1rem;
+    color:red;
 }
 .form-buttons{
-    margin-top:1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    margin-top:1rem;
 }
 
 .form-buttons p{
     font-size: 1.5rem;
+    margin:1rem 0;
 }
-form button{
+.form-buttons button{
     padding: 1rem;
-    width:50%;
-    
+    width:100%;
+    display: block;
 }
 input{
-    border: none;
-    border-bottom:1px solid gray;
+    border:.5px solid rgb(209, 205, 205);
     padding:1rem;
+    border-radius: .5rem;
 }
 .page-heading{
     text-align: center;
     margin:1.5rem;
     margin-bottom:2rem;
 }
+
+

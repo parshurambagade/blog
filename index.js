@@ -22,11 +22,15 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Reference to the User model
   }
-}, {timestamps: true});
+});
 
 
 const userSchema = new mongoose.Schema({
@@ -90,18 +94,26 @@ app.get('/register', (req,res) => {
 app.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
-
-    const hash = await bcrypt.hash(password, 10);
-
-    const user = new User({
-      username,
-      email,
-      password: hash,
+    await User.findOne({$or: [{email: email}, {username: username}]})
+    .then(async user => {
+      if(user) { 
+        res.render('register.ejs', {msg: user.email == email ? "Email already registered!" : "Username is already taken!"}); 
+      }else{
+        const hash = await  bcrypt.hash(password, 10);
+  
+        const user = new User({
+          username, 
+          email,
+          password: hash,
+        });
+  
+        await user.save();
+        res.status(201).redirect('/login');
+      }
+    
     });
-
-    await user.save().maxTimeMS(20000);
-    res.redirect('/login');
-  } catch (err) {
+    
+  }catch (err) {
     console.error(err);
     res.status(500).send('An error occurred during registration');
   }
@@ -117,10 +129,10 @@ app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const foundUser = await User.findOne({ email: email }).maxTimeMS(20000);
+    const foundUser = await User.findOne({ email: email });
 
     if (!foundUser) {
-      res.status(404).json({ message: 'User not found!' });
+      res.status(404).render("login.ejs",{ msg: 'User not found!' });
       return;
     }
 
