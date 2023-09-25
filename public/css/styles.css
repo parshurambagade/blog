@@ -39,10 +39,10 @@ body{
 }
 
 .footer {
-	position: absolute;
+	/* position: absolute; */
 	text-align: center;
 	width: 100%;
-    bottom: 0;
+    /* bottom: 0; */
 	height: max-content;
 	background-color: #1abc9c;
     display: flex;
@@ -69,11 +69,12 @@ body{
     flex-direction: row;
 }
 .post-card{
-    height:40vh;
+    height:max-content;
     border: 1px solid black;
     border-radius: 1rem;
     width:30%;
     padding:2rem;
+    background-color: rgba(157, 233, 215, 0.829);
 }
 
 .post-date{
