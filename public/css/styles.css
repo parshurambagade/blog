@@ -5,28 +5,44 @@
 }
 body{
     background-color: rgb(223, 249, 240);
+    
 }
 .container-fluid {
     padding-top:5rem;
     padding-bottom:5rem;
 }
 .container{
-    padding:0 6rem;
+    padding:0 10vw;
+    width:100vw;
 }
 
 .homeContainer, .aboutContainer, .contactContainer, .postContainer, .composeContainer{
-    min-height:70vh !important;
+    min-height:100vh !important;
     height: max-content;
+    width:100%;
 }
 .navbar {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    /* padding-top: 15px;
+    padding-bottom: 15px; */
     border: 0;
     border-radius: 0;
     margin-bottom: 0;
     font-size: 12px;
     letter-spacing: 5px;
     background-color:transparent;
+    height:10vh;
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;
+    width:100%;
+    padding: 0 10vw;
+}
+
+.nav-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .navbar-nav  li a:hover {
@@ -67,6 +83,7 @@ body{
     flex-wrap: wrap;
     gap:3rem;
     flex-direction: row;
+    margin:5vh 0;
 }
 .post-card{
     height:max-content;
@@ -163,3 +180,62 @@ input{
 }
 
 
+/* MEDIA QUERIES */
+@media screen and (max-width:767px){
+
+    /* NAVBAR */
+    .navbar{
+        height:max-content;
+        padding:1vh 5vw;
+    }
+    
+    .nav-container{
+       flex-direction: column;
+       gap:.5rem;
+    }
+
+    .nav{
+        display: flex;
+
+    }
+
+   /* CONTAINER */
+    .container{
+        padding:0 5vw;
+        height:max-content;
+    }
+
+    /* HOME */
+    .addIcon{
+        bottom:10vh;
+        right:10vw;
+    }
+
+    .posts-section{
+        flex-wrap: wrap;
+    }
+
+    .post-card{
+        width:100%;
+    }
+
+    /* LOGIN / REGISTER */
+    .page-container{
+        width:100%;
+        flex-direction: column;
+        padding:0;
+        height:max-content;
+    }
+    .first-container{
+        display: none;
+    }
+    .second-container{
+        width:100%;
+        border-radius: 2rem !important;
+    }
+
+    .page-container form{
+        padding:2vh 0;
+        height: max-content;
+    }
+}

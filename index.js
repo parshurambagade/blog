@@ -1,15 +1,15 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
-dotenv.config();
 const secretKey = 'your-secret-key';
+const path = require('path');
 
-mongoose.connect(process.env.MONGO_URL_CLOUD, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI_CLOUD)
 .then(() => console.log('MongoDB connected successfully'))
 .catch((err) => console.log(`error occoured: ${err}`));
 
@@ -36,8 +36,7 @@ const postSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   email: {
     type: String,
@@ -67,9 +66,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.set('view engine', 'ejs');
-
+app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+
 
 // Middleware to verify JWT and extract user information
 const verifyToken = (req, res, next) => {
@@ -87,6 +87,8 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+
+
 app.get('/register', (req,res) => {
   res.render('register');
 });
@@ -94,10 +96,10 @@ app.get('/register', (req,res) => {
 app.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    await User.findOne({$or: [{email: email}, {username: username}]})
-    .then(async user => {
-      if(user) { 
-        res.render('register.ejs', {msg: user.email == email ? "Email already registered!" : "Username is already taken!"}); 
+    await User.findOne({email: email})
+    .then(async foundUser => {
+      if(foundUser) { 
+        res.render('register.ejs', {msg: foundUser.email == email && "Email already registered!"}); 
       }else{
         const hash = await  bcrypt.hash(password, 10);
   
@@ -187,7 +189,7 @@ app.get('/compose',verifyToken,  (req,res) => {
 });
 
 app.post('/compose', verifyToken, (req,res) => {
-  const {title, content} = req.body;
+  const {title,  content} = req.body;
   const userId = req.user._id; // Extracted from the JWT
   const post = new Post ({
     title: title,
@@ -208,6 +210,7 @@ app.get('/posts/:postId',verifyToken, (req,res) => {
   Post.findOne({_id: requestedPostId})
   .then((post) => {
       if(post){
+        console.log(post.thumbnail);
         res.render('post',{title: post.title, content: post.content});
       }else{
         console.log("No post.");
@@ -218,12 +221,6 @@ app.get('/posts/:postId',verifyToken, (req,res) => {
 });
 
 
-
-
-
-
-
-
-app.listen(process.env.PORT, function() {
-  console.log("Server started on port 3000");
+app.listen(process.env.PORT, () => {
+  console.log(`Server started on port ${process.env.PORT}`);
 });
